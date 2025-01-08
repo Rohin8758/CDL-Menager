@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { collection, query, where, orderBy, getDocs, updateDoc, doc, setDoc, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 const Contacts = () => {
@@ -8,8 +8,6 @@ const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const [user, setuser] = useState((JSON.parse(localStorage.getItem('user'))))
     const [companyId, setCompanyId] = useState("");
-    const [userdata, setUsersdata] = useState([]);
-    const [imageUrl, setimageUrl] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
 
     const navigate = useNavigate();
@@ -32,8 +30,6 @@ const Contacts = () => {
                     .filter((doc) => doc.id != user.uid)
 
                 setContacts(userData)
-                // console.log(role);
-                // setUsersdata(users);
             } catch (error) {
                 console.error("Error getting companies:", error);
             }
@@ -41,53 +37,7 @@ const Contacts = () => {
         fetchusers();
     }, [user]);
 
-    // const handleChat = (user) => {
-    //     console.log("Clicked user:", user.id);
-
-    //     // try {
-
-    //     //     const currentUser = auth.currentUser.uid;
-
-    //     //     // Query to check if a chat room already exists between the two users
-    //     //     const roomsQuery = query(
-    //     //         collection(db, "rooms"),
-    //     //         where("users", "array-contains", currentUser)
-    //     //     );
-    //     //     const roomsSnapshot = await getDocs(roomsQuery);
-    //     //     let existingRoom = null;
-
-    //     //     roomsSnapshot.forEach((roomDoc) => {
-    //     //         const roomData = roomDoc.data();
-    //     //         if (roomData.users.includes(user.uid)) {
-    //     //             existingRoom = roomDoc;
-    //     //         }
-    //     //     });
-
-    //     //     if (existingRoom) {
-    //     //         // Room already exists, navigate to the existing room
-    //     //         navigate(`/chat/${existingRoom.id}`, { state: { room: existingRoom.data(), firstName: user.firstName } });
-    //     //     } else {
-    //     //         // No existing room, create a new one
-    //     //         const roomId = uuidv4();
-    //     //         const room = {
-    //     //             id: roomId,
-    //     //             users: [currentUser, user.uid],
-    //     //             name: user.firstName,
-    //     //             imageUrl: user.imageUrl,
-    //     //             lastMessage: "",
-    //     //             createdAt: new Date()
-    //     //         };
-
-    //     //         await setDoc(doc(db, "rooms", roomId), room);
-    //     //         navigate(`/chat/${roomId}`, { state: { room, firstName: user.firstName } });
-    //     //     }
-    //     // } catch (error) {
-    //     //     console.error("Error creating or finding chat room: ", error);
-    //     // }
-    // };
-
     const handleChat = async (contact) => {
-        // console.log("Clicked user:", contact.id);
 
         try {
             const currentUser = auth.currentUser;
@@ -96,7 +46,6 @@ const Contacts = () => {
                 return;
             }
 
-            // Query to check if chat room exists
             const qry = query(
                 collection(db, "rooms"),
                 where("userIds", "array-contains", user.uid)
@@ -108,20 +57,15 @@ const Contacts = () => {
             let chatRoom = null;
             querySnapshot.forEach((doc) => {
                 const chatRoomData = doc.data();
-                console.log(chatRoomData, "chatRoomData")
-                console.log(chatRoomData.userIds.includes(contact.id))
                 if (chatRoomData.userIds.includes(contact.id)) {
-                    console.log(123)
                     chatRoom = { id: doc.id, ...chatRoomData };
                 }
             });
 
-            //if chat room not exist then create new chat room
             if (!chatRoom) {
                 const room = {
                     userIds: [currentUser.uid, contact.id],
-                    name: contact.firstName, // Adjust based on your user structure
-                    // imageUrl: user.imageUrl, // Adjust based on your user structure
+                    name: contact.firstName, 
                     type: "direct",
                     lastMessage: '',
                     createdAt: new Date(),
@@ -132,7 +76,6 @@ const Contacts = () => {
                 chatRoom = { id: newChatRoomRef.id, ...room };
             }
 
-            // Navigate to the chat room with roomId
             let finalData = { ...chatRoom, contact }
             navigate(`/chat/${chatRoom.id}`, { state: { room: finalData } });
 
@@ -155,14 +98,6 @@ const Contacts = () => {
 
     return (
         <div className="p-2">
-            {/*<div id="main" class="container mt-5">
-                <div class="searchable-container">
-                    <input type="text" class="form-control form-control-lg mb-2" id="search-input" placeholder="Search..." />
-                    <div class="error-message mb-2" id="error-message">No results found.</div>
-                    <select class="form-select" id="searchable-select" size="8">
-                    </select>
-                </div>
-            </div>*/}
             <div className="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg overflow-hidden border-2 mb-2">
                 <div className="grid place-items-center h-full w-12 text-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

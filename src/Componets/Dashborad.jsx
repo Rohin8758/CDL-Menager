@@ -1,20 +1,9 @@
 import React, {
-    useState,
-    useEffect
+    useState
 } from "react";
-import { IoIosPeople, IoMdSend } from "react-icons/io";
-import { FaArrowLeft } from "react-icons/fa";
-import {
-    MdMessage
-} from "react-icons/md";
-import { HiDotsVertical } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Chat from "./Chat";
 import Header from "./Header";
-import { auth, db } from "../firebase";
-import { v4 as uuidv4 } from "uuid";
-import { collection, query, where, orderBy, getDocs, updateDoc, doc } from "firebase/firestore";
 import Contacts from "./Contacts";
 import Conversations from "./Conversations";
 
@@ -347,34 +336,6 @@ export default function Wapp() {
     const [chats, setChats] = useState(defaultChats);
     const [selectedTab, setSelectedTab] = useState("Chats");
     const [selectedChat, setSelectedChat] = useState(null);
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(() => {
-        // const user = auth.currentUser;
-        // if (user) {
-        // Navigate("/dashborad");
-        // } else {
-        // Navigate("/dashborad");
-
-        // }
-
-        // const user = localStorage.getItem('isLoggedIn');
-
-        // if (user) {
-        //     setIsLoggedIn(true);
-        //     Navigate("/dashborad");
-
-        // } else {
-        //     setIsLoggedIn(false);
-        // }
-    }, []);
-
-    // useEffect(() => {
-    //     let x = localStorage.getItem("isLoggedIn");
-    //     if (!x) {
-    //        Navigate("/");  
-    //     }
-    // }, [])
 
     if (Boolean(selectedChat))
         return (

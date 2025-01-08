@@ -11,31 +11,29 @@ import Chat from './Componets/Chat';
 
 function App() {
 
-  const isAuth = localStorage.getItem('isloggedIn')
+  // const isAuth = localStorage.getItem('isloggedIn')
 
   return (
     <div className="App">
       <Routes>
-        {isAuth ? (
-          <>
-            {/* <Route path="/" element={<Navigate to="/dashboard" />} /> */}
+        {/* {isAuth ? ( */}
+          {/* <> */}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/Change-password" element={<Changepassword />} />
             <Route path="/profile" element={<Profile />} /> 
             <Route path="/update-profile" element={<Updateprofile />} />
             <Route path="/chat/:id" element={<Chat   />} />
-            <Route path="*" element={<Navigate to="/dashboard" />} /> {/* Fallback route */}
-          </>
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          {/* </>
         ) : (
-          <>
+          <> */}
             <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<Forgotpassword />} />
-            <Route path="*" element={<Navigate to="/login" />} /> {/* Fallback route */}
-            
-          </>
-        )}
+            <Route path="*" element={<Navigate to="/login" />} />
+          {/* </>
+        )} */}
       </Routes>
     </div>
   );

@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { auth, db, doc, getDoc } from "../firebase";
-import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { db, doc, getDoc } from "../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import {
   MdMessage
 } from "react-icons/md";
 
 
-const Conversations = ({ chats, setSelectedChat, setIsCalling }) => {
-  const [contacts, setContacts] = useState([]); 
+const Conversations = () => {
   const [selectedProfile, setSelectedProfile] = useState(false);
   const [user, setuser] = useState((JSON.parse(localStorage.getItem('user'))))
   const [conversations, setConversations] = useState([]);
-  const [userData, setUserData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
 
   const getUser = async (id) => {
-    // console.log(id)
     const userQuery = query(doc(db, "users", id))
     const userSnapshot = await getDoc(userQuery);
-    // const userData = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     console.log("userSnapshot", userSnapshot.data());
     return { ...userSnapshot.data(), id: id };
   };
@@ -41,7 +36,6 @@ const Conversations = ({ chats, setSelectedChat, setIsCalling }) => {
           let val = doc.data();
           val.contact = val.userIds.filter(x => x !== user.uid);
 
-          // Fetch contact user details
           if (val.contact.length > 0) {
             val.contactUser = await getUser(val.contact[0]);
           } else {
@@ -50,43 +44,25 @@ const Conversations = ({ chats, setSelectedChat, setIsCalling }) => {
 
           return val;
         })
-        // .filter(e => e.contactUser?.id != user.uid)
-        // .filter(e => {e.contactUser?.id != "8RxJqEffJUYs5Qh0a6XbU7fkhMg1"} )
       );
-      // fetchedConversations = fetchedConversations.filter(e =>{ 
-      //   console.log(e);
-      //   return e.contactUser?.id != "8RxJqEffJUYs5Qh0a6XbU7fkhMg1"
-      // })
     (fetchedConversations.filter(e =>{ 
         console.log(e);
         return e.contactUser?.id != "8RxJqEffJUYs5Qh0a6XbU7fkhMg1"
       }));
       setConversations(fetchedConversations);
-      // console.log("all", querySnapshot);
       console.log("useruid", user.uid);
       console.log("fetchedConversations", fetchedConversations);
-      // console.log("conversations-user",conversations)
     } catch (e) {
       console.error("Error fetching conversations: ", e);
     }
   };
-
 
   useEffect(() => {
     getRooms();
   }, []);
 
 
-  const getRandomKey = () => {
-    const key = Math.floor(Math.random() * 200000).toString();
-    // console.log(key);
-    return key;
-  };
-
-
   const getRoom = async (roomId) => {
-    // Fetch the room data and navigate to the chat page
-    //
     try {
       const docRef = doc(db, "rooms", roomId);
       const docSnap = await getDoc(docRef);
@@ -156,27 +132,12 @@ const filteredContacts = normalizedSearchTerm
             <div>
               <h4 className="text-gray-800 font-medium text-base flex justify-between">
                 <span>{chat?.contactUser?.firstName}</span>
-                { }
-                {/* <span
-                  className={`text-xs ${chat.unread.length ? "text-blue-400" : "text-black/50"
-                    }`}
-                >
-                  {chat.messages[chat?.messages?.length - 1].time}
-                </span> */}
               </h4>
               <p className="text-gray-500 font-thin text-base flex justify-between m-1 text-sm">
                 <span>{chat?.lastMessage}</span>
               </p>
 
               <p className="text-sm text-black/60 flex justify-between">
-                {/* <span className="line-clamp-1 text-start  w-[95%]">
-                  {chat.messages[chat.messages.length - 1].text}
-                </span>
-                {chat.unread > 0 && (
-                  <span className="bg-blue-400 text-white text-xs w-5 h-5 rounded-full inline-flex pt-0.5 items-center justify-center">
-                    {chat.unread}
-                  </span>
-                )} */}
               </p>
             </div>
           </div>

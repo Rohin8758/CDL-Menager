@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase'; // Ensure to import your Firebase instance
+import { auth } from '../firebase';
 
 const SignOut = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -9,11 +9,7 @@ const SignOut = () => {
       await auth.signOut();
       localStorage.removeItem('user');
       localStorage.removeItem('isloggedin');
-      // localStorage.clear();
-      // localStorageService.clearAll();
-      // Replace with your navigation logic after sign out
       console.log('User signed out');
-      // Example: window.location.href = '/login'; or use React Router
     } catch (error) {
       console.error('Error signing out:', error.message);
     }

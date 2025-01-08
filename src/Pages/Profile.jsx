@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { SlArrowRight } from "react-icons/sl";
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Componets/Navbar';
 import { auth, storage, updateProfile,doc,db,updateDoc } from '../firebase';
 import { toast } from 'react-toastify';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-// import profile from './profile.png';
 
 function Profile() {
 
@@ -14,7 +12,6 @@ function Profile() {
 
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [image, setImage] = useState("")
     const [selectedImage, setSelectedImage] = useState();
     const navigate = useNavigate();
 
@@ -24,7 +21,6 @@ function Profile() {
         user = JSON.parse(user)
     }
 
-    // const isimageURL = user?.photoURL
     const getname = user?.displayName
 
     const handleImageChange = async (event) => {
@@ -33,9 +29,7 @@ function Profile() {
         if (file) {
             const storageRef = ref(storage, file.name);
             await uploadBytes(storageRef, file);
-            //start loader
             const downloadURL = await getDownloadURL(storageRef);
-            // end loader 
             console.log(downloadURL)
             setSelectedImage(downloadURL);
             const user = auth.currentUser;
